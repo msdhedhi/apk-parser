@@ -153,7 +153,6 @@ public class ParseUtils {
         int size = Buffers.readUShort(buffer);
         short res0 = Buffers.readUByte(buffer);
         short dataType = Buffers.readUByte(buffer);
-
         switch (dataType) {
             case ResValue.ResType.INT_DEC:
                 return ResourceValue.decimal(buffer.getInt());
@@ -167,6 +166,8 @@ public class ParseUtils {
                     return null;
                 }
             case ResValue.ResType.REFERENCE:
+                return ResourceValue.reference(buffer.getInt());
+            case ResValue.ResType.TYPE_DYNAMIC_REFERENCE:
                 return ResourceValue.reference(buffer.getInt());
             case ResValue.ResType.INT_BOOLEAN:
                 return ResourceValue.bool(buffer.getInt());

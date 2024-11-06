@@ -1,5 +1,6 @@
 package net.dongliu.apk.parser.struct.resource;
 
+import net.dongliu.apk.parser.struct.ResourceValue;
 import net.dongliu.apk.parser.struct.StringPool;
 import net.dongliu.apk.parser.utils.Buffers;
 import net.dongliu.apk.parser.utils.ParseUtils;
@@ -32,17 +33,22 @@ public class Type {
         this.density = config.getDensity();
     }
 
-    public ResourceEntry getResourceEntry(int id) {
-        if (id >= offsets.length) {
+    public ResourceEntry getResourceEntry(int resId) {
+        if (resId >= offsets.length) {
             return null;
         }
 
-        if (offsets[id] == TypeHeader.NO_ENTRY) {
+        if (offsets[resId] == TypeHeader.NO_ENTRY) {
+            return null;
+        }
+       
+        if( offsets[resId] >= buffer.limit() ) {
+            //System.out.println( "invalid offset: " + offsets[resId] );
             return null;
         }
 
         // read Resource Entries
-        Buffers.position(buffer, offsets[id]);
+        Buffers.position(buffer, offsets[resId]);
         return readResourceEntry();
     }
 
@@ -53,10 +59,11 @@ public class Type {
         resourceEntry.setSize(Buffers.readUShort(buffer));
         resourceEntry.setFlags(Buffers.readUShort(buffer));
         long keyRef = buffer.getInt();
-        String key = keyStringPool.get((int) keyRef);
-        resourceEntry.setKey(key);
 
         if ((resourceEntry.getFlags() & ResourceEntry.FLAG_COMPLEX) != 0) {
+            String key = keyStringPool.get((int) keyRef);
+            resourceEntry.setKey(key);
+
             ResourceMapEntry resourceMapEntry = new ResourceMapEntry(resourceEntry);
 
             // Resource identifier of the parent mapping, or 0 if there is none.
@@ -73,7 +80,13 @@ public class Type {
 
             resourceMapEntry.setResourceTableMaps(resourceTableMaps);
             return resourceMapEntry;
+        } else if ((resourceEntry.getFlags() & ResourceEntry.FLAG_COMPACT) != 0) {
+            resourceEntry.setValue(ResourceValue.string((int)keyRef, stringPool));
+            return resourceEntry;
         } else {
+            String key = keyStringPool.get((int) keyRef);
+            resourceEntry.setKey(key);
+
             Buffers.position(buffer, beginPos + resourceEntry.getSize());
             resourceEntry.setValue(ParseUtils.readResValue(buffer, stringPool));
             return resourceEntry;

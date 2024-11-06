@@ -118,7 +118,13 @@ public class ResourceTableParser {
                     // read offsets table
                     long[] offsets = new long[(int) typeHeader.getEntryCount()];
                     for (int i = 0; i < typeHeader.getEntryCount(); i++) {
-                        offsets[i] = Buffers.readUInt(buffer);
+                        if( (typeHeader.getFlags() & 0x01 ) == 0x01 ) /* FLAG_SPARSE */ {
+                            throw new RuntimeException("FLAG_SPARSE unsupported at the moment");
+                        } else if( (typeHeader.getFlags() & 0x02 ) == 0x02 ) /* FLAG_OFFSET16 */ {
+                            offsets[i] = Buffers.readUShort(buffer) * 4;
+                        } else {
+                            offsets[i] = Buffers.readUInt(buffer);
+                        }
                     }
 
                     Type type = new Type(typeHeader);
@@ -206,8 +212,8 @@ public class ResourceTableParser {
             case ChunkType.TABLE_TYPE:
                 TypeHeader typeHeader = new TypeHeader(headerSize, chunkSize);
                 typeHeader.setId(Buffers.readUByte(buffer));
-                typeHeader.setRes0(Buffers.readUByte(buffer));
-                typeHeader.setRes1(Buffers.readUShort(buffer));
+                typeHeader.setFlags(Buffers.readUByte(buffer));
+                typeHeader.setRes(Buffers.readUShort(buffer));
                 typeHeader.setEntryCount(Buffers.readUInt(buffer));
                 typeHeader.setEntriesStart(Buffers.readUInt(buffer));
                 typeHeader.setConfig(readResTableConfig());

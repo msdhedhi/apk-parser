@@ -62,7 +62,9 @@ public class ResValue {
         // The 'data' holds a complex number encoding a fraction of a
         // container.
         public static final short FRACTION = 0x06;
-
+        // The 'data' holds a dynamic ResTable_ref, which needs to be
+        // resolved before it can be used like a TYPE_REFERENCE.
+        public static final short TYPE_DYNAMIC_REFERENCE = 0x07;
         // Beginning of integer flavors...
         public static final short FIRST_INT = 0x10;
 

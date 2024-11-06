@@ -7,6 +7,9 @@ import net.dongliu.apk.parser.utils.Unsigned;
 /**
  * @author dongliu
  */
+/*
+ * See ResTable_type in file frameworks/base/libs/androidfw/include/androidfw/ResourceTypes.h
+ */
 public class TypeHeader extends ChunkHeader {
 
     public static final long NO_ENTRY = 0xFFFFFFFFL;
@@ -17,9 +20,9 @@ public class TypeHeader extends ChunkHeader {
     private byte id;
 
     // Must be 0. uint8_t
-    private byte res0;
-    // Must be 0. uint16_t
-    private short res1;
+    private byte flags;
+    // reserved
+    private short res;
 
     // Number of uint32_t entry indices that follow. uint32
     private int entryCount;
@@ -42,20 +45,20 @@ public class TypeHeader extends ChunkHeader {
         this.id = Unsigned.toUByte(id);
     }
 
-    public short getRes0() {
-        return Unsigned.toUShort(res0);
+    public short getFlags() {
+        return Unsigned.toUShort(flags);
     }
 
-    public void setRes0(short res0) {
-        this.res0 = Unsigned.toUByte(res0);
+    public void setFlags(short flags) {
+        this.flags = Unsigned.toUByte(flags);
     }
 
-    public int getRes1() {
-        return Unsigned.toInt(res1);
+    public int getRes() {
+        return Unsigned.toInt(res);
     }
 
-    public void setRes1(int res1) {
-        this.res1 = Unsigned.toUShort(res1);
+    public void setRes(int res1) {
+        this.res = Unsigned.toUShort(res);
     }
 
     public int getEntryCount() {
