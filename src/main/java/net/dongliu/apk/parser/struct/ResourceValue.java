@@ -17,6 +17,8 @@ public abstract class ResourceValue {
     protected ResourceValue(int value) {
         this.value = value;
     }
+    
+    public int getValue() { return value; }
 
     /**
      * get value as string.

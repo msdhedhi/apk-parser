@@ -65,7 +65,13 @@ public class ResourceTable {
         // read from type resource
         List<Resource> result = new ArrayList<>();
         for (Type type : types) {
-            ResourceEntry resourceEntry = type.getResourceEntry(entryIndex);
+            ResourceEntry resourceEntry = null;
+            try {
+                resourceEntry = type.getResourceEntry(entryIndex);
+            } catch( Exception e) {
+                // ignore and try the next one
+            }
+            
             if (resourceEntry == null) {
                 continue;
             }

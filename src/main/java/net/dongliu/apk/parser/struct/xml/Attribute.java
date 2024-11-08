@@ -23,10 +23,11 @@ public class Attribute {
     private String value;
 
     public String toStringValue(ResourceTable resourceTable, Locale locale) {
-        if (rawValue != null) {
-            return rawValue;
-        } else if (typedValue != null) {
+        
+        if (typedValue != null) {
             return typedValue.toStringValue(resourceTable, locale);
+        } else if (rawValue != null) {
+            return rawValue;
         } else {
             // something happen;
             return "";

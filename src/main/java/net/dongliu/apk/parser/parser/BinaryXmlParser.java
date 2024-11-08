@@ -176,16 +176,22 @@ public class BinaryXmlParser {
         Attributes attributes = new Attributes(attributeCount);
         for (int count = 0; count < attributeCount; count++) {
             Attribute attribute = readAttribute();
-            if (xmlStreamer != null) {
-                String value = attribute.toStringValue(resourceTable, locale);
-                if (intAttributes.contains(attribute.getName()) && Strings.isNumeric(value)) {
-                    try {
-                        value = getFinalValueAsString(attribute.getName(), value);
-                    } catch (Exception ignore) {
+            try {
+                if (xmlStreamer != null) {
+                    String value = attribute.toStringValue(resourceTable, locale);
+                    if (intAttributes.contains(attribute.getName()) && Strings.isNumeric(value)) {
+                        try {
+                            value = getFinalValueAsString(attribute.getName(), value);
+                        } catch (Exception ignore) {
+                        }
                     }
+                    attribute.setValue(value);
+                    attributes.set(count, attribute);
                 }
-                attribute.setValue(value);
-                attributes.set(count, attribute);
+            } catch( Exception e) {
+                // TODO: catch exception for adaptive icons. Need to work on a proper fix
+                attribute.setValue("ErrorResourceId:0x" + Long.toHexString(attribute.getTypedValue().getValue()));
+                attributes.set(count, attribute);            
             }
         }
         xmlNodeStartTag.setAttributes(attributes);

@@ -55,13 +55,17 @@ public class ApkMetaTranslator implements XmlStreamer {
                             for (ResourceTable.Resource resource : resources) {
                                 Type type = resource.getType();
                                 ResourceEntry resourceEntry = resource.getResourceEntry();
-                                String path = resourceEntry.toStringValue(resourceTable, locale);
-                                if (type.getDensity() == Densities.DEFAULT) {
-                                    hasDefault = true;
-                                    apkMetaBuilder.setIcon(path);
+                                try {
+                                    String path = resourceEntry.toStringValue(resourceTable, locale);
+                                    if (type.getDensity() == Densities.DEFAULT) {
+                                        hasDefault = true;
+                                        apkMetaBuilder.setIcon(path);
+                                    }
+                                    IconPath iconPath = new IconPath(path, type.getDensity());
+                                    icons.add(iconPath);
+                                } catch( Exception e) {
+                                    // ignore. Try the next one
                                 }
-                                IconPath iconPath = new IconPath(path, type.getDensity());
-                                icons.add(iconPath);
                             }
                             if (!hasDefault) {
                                 apkMetaBuilder.setIcon(icons.get(0).getPath());

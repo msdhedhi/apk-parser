@@ -5,6 +5,7 @@ import net.dongliu.apk.parser.bean.ApkSigner;
 import net.dongliu.apk.parser.bean.CertificateMeta;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.util.List;
@@ -15,6 +16,95 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ApkFileTest {
+    
+    @Test
+    public void testSettings() throws IOException {
+        System.out.println( "----------------------------------------------------------------");
+        String apkToTest = "apks/Settings.apk";
+        if( getClass().getClassLoader().getResource(apkToTest) == null ) {
+            System.out.println ("File: " + apkToTest + " does not exist.");
+            return;
+        }
+        String path = getClass().getClassLoader().getResource(apkToTest).getPath();
+        try (ApkFile apkFile = new ApkFile(path)) {
+            apkFile.setPreferredLocale(Locale.ENGLISH);
+            ApkMeta apkMeta = apkFile.getApkMeta();
+            //System.out.println( "" + apkFile.getManifestXml() );
+            
+            System.out.println( "Version: " + apkFile.getApkMeta().getVersionName() );
+            System.out.println( "PackageName: " + apkFile.getApkMeta().getPackageName() );
+            System.out.println( "Name: " + apkFile.getApkMeta().getLabel() );
+            System.out.println( "Icon: " + apkFile.getAllIcons() );
+            assertEquals("com.android.settings", apkMeta.getPackageName());
+            assertEquals("Settings", apkFile.getApkMeta().getLabel());
+        }
+    }
+
+    @Test
+    public void testBrowser() throws IOException {
+        System.out.println( "----------------------------------------------------------------");
+        String apkToTest = "apks/Browser.apk";
+        if( getClass().getClassLoader().getResource(apkToTest) == null ) {
+            System.out.println ("File: " + apkToTest + " does not exist.");
+            return;
+        }
+        String path = getClass().getClassLoader().getResource(apkToTest).getPath();
+        try (ApkFile apkFile = new ApkFile(path)) {
+            apkFile.setPreferredLocale(Locale.ENGLISH);
+            ApkMeta apkMeta = apkFile.getApkMeta();
+            System.out.println( "" + apkFile.getManifestXml() );
+            
+            System.out.println( "Version: " + apkFile.getApkMeta().getVersionName() );
+            System.out.println( "PackageName: " + apkFile.getApkMeta().getPackageName() );
+            System.out.println( "Name: " + apkFile.getApkMeta().getLabel() );
+            assertEquals("com.android.browser", apkMeta.getPackageName());
+            assertEquals("Browser", apkFile.getApkMeta().getLabel());
+        }
+    }
+
+    @Test
+    public void testCamera() throws IOException {
+        System.out.println( "----------------------------------------------------------------");
+        String apkToTest = "apks/Camera2.apk";
+        if( getClass().getClassLoader().getResource(apkToTest) == null ) {
+            System.out.println ("File: " + apkToTest + " does not exist.");
+            return;
+        }
+        String path = getClass().getClassLoader().getResource(apkToTest).getPath();
+        try (ApkFile apkFile = new ApkFile(path)) {
+            apkFile.setPreferredLocale(Locale.ENGLISH);
+            ApkMeta apkMeta = apkFile.getApkMeta();
+            System.out.println( "" + apkFile.getManifestXml() );
+            
+            System.out.println( "Version: " + apkFile.getApkMeta().getVersionName() );
+            System.out.println( "PackageName: " + apkFile.getApkMeta().getPackageName() );
+            System.out.println( "Name: " + apkFile.getApkMeta().getLabel() );
+            assertEquals("com.android.camera2", apkMeta.getPackageName());
+            assertEquals("Camera", apkFile.getApkMeta().getLabel());
+        }
+    }
+    
+    @Test
+    public void testPlayAutoInstallConfig() throws IOException {
+        System.out.println( "----------------------------------------------------------------");
+        String apkToTest = "apks/PlayAutoInstallConfig.apk";
+        if( getClass().getClassLoader().getResource(apkToTest) == null ) {
+            System.out.println ("File: " + apkToTest + " does not exist.");
+            return;
+        }
+        String path = getClass().getClassLoader().getResource(apkToTest).getPath();
+        try (ApkFile apkFile = new ApkFile(path)) {
+            apkFile.setPreferredLocale(Locale.ENGLISH);
+            ApkMeta apkMeta = apkFile.getApkMeta();
+            System.out.println( "" + apkFile.getManifestXml() );
+            
+            System.out.println( "Version: " + apkFile.getApkMeta().getVersionName() );
+            System.out.println( "PackageName: " + apkFile.getApkMeta().getPackageName() );
+            System.out.println( "Name: " + apkFile.getApkMeta().getLabel() );
+            assertEquals("android.autoinstalls.config.google.nexus", apkMeta.getPackageName());
+            assertEquals("Device configuration", apkFile.getApkMeta().getLabel());
+        }
+    }
 
     @Test
     public void testParserMeta() throws IOException {
