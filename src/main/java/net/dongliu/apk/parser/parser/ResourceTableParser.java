@@ -118,11 +118,11 @@ public class ResourceTableParser {
                     // read offsets table
                     long[] offsets = new long[(int) typeHeader.getEntryCount()];
                     for (int i = 0; i < typeHeader.getEntryCount(); i++) {
-                        if( (typeHeader.getFlags() & 0x01 ) == 0x01 ) /* FLAG_SPARSE */ {
-                            throw new RuntimeException("FLAG_SPARSE unsupported at the moment");
-                        } else if( (typeHeader.getFlags() & 0x02 ) == 0x02 ) /* FLAG_OFFSET16 */ {
+                        // as per frameworks/base/libs/androidfw/include/androidfw/ResourceTypes.h
+                        // the table type is FLAG_SPARSE or FLAG_OFFSET16
+                        if( (typeHeader.getFlags() & 0x02 ) == 0x02 ) /* FLAG_OFFSET16 */ {
                             offsets[i] = Buffers.readUShort(buffer) * 4;
-                        } else {
+                        } else {  /* FLAG_SPARSE */
                             offsets[i] = Buffers.readUInt(buffer);
                         }
                     }
